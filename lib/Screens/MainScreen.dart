@@ -9,38 +9,76 @@ import 'package:gulf_demo/Widgets/MainHomeItem.dart';
 import 'package:gulf_demo/Widgets/SliderWidget.dart';
 import 'package:provider/provider.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        final homeState = Provider.of<HomeState>(context, listen: false);
+        homeState.loadMore();
+      }
+    });
+    //loadNextPage();
+  }
+
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+//  Future<void> _onScrollUpdated() async {
+//    var maxScroll = _controller.position.maxScrollExtent;
+//    var currentPosition = _controller.position.pixels;
+//    if (currentPosition == maxScroll) {
+//
+//      //todoService.loadNextPage();
+//      print("Hi");
+//    }
+//  }
+
   @override
   Widget build(BuildContext context) {
     final homeState = Provider.of<HomeState>(context, listen: false);
+    //homeState.reachBottom();
     TextEditingController SearchController = TextEditingController();
     return Scaffold(
       backgroundColor: Color(0xFFFAFAFA),
-      floatingActionButton:
-      Container(
+      floatingActionButton: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           color: Color(0xFF026B7E),
         ),
         width: 60.0,
         height: 40.0,
-
-        child: Center(child: Row(
+        child: Center(
+            child: Row(
           children: [
-            Icon(Icons.location_on,color: Colors.white,),
-            Text("Map",style: TextStyle(color: Colors.white),),
+            Icon(
+              Icons.location_on,
+              color: Colors.white,
+            ),
+            Text(
+              "Map",
+              style: TextStyle(color: Colors.white),
+            ),
           ],
         )),
-
       ),
-
-
-
       body: Stack(
         children: <Widget>[
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 64.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 64.0),
+            child: SingleChildScrollView(
+              controller: _scrollController,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -72,9 +110,12 @@ class MainScreen extends StatelessWidget {
                             child: ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: state.MainModel.data.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return MainHomeItem(state.MainModel, index);
+                                itemCount: state.homeList.length + 1,
+                                itemBuilder: (context, i) {
+                                  if (i == state.homeList.length) {
+                                    return CupertinoActivityIndicator();
+                                  }
+                                  return MainHomeItem(state.homeList[i]);
                                 }));
                   }),
                 ],
@@ -119,53 +160,42 @@ class MainScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 120.0,right:5.0),
+            padding: const EdgeInsets.only(top: 120.0, right: 5.0),
             child: Align(
               alignment: Alignment.topRight,
-              child:Container(
+              child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   color: Colors.white,
                 ),
                 width: 60.0,
                 height: 40.0,
-
-                child: Center(child: Row(
+                child: Center(
+                    child: Row(
                   children: [
-                    Icon(Icons.compare,color: Color(0xFF026B7E),),
-                    Text("Sort",style: TextStyle(color:Color(0xFF026B7E),),
-                    )],
+                    Icon(
+                      Icons.compare,
+                      color: Color(0xFF026B7E),
+                    ),
+                    Text(
+                      "Sort",
+                      style: TextStyle(
+                        color: Color(0xFF026B7E),
+                      ),
+                    )
+                  ],
                 )),
-
               ),
             ),
           ),
-//          Align(
-//            alignment: Alignment.bottomRight,
-//            child: FloatingActionButton(
-//                heroTag: null,
-//                onPressed: () {  },
-//                child: Text("top"),),
-//          ),
+          Consumer<HomeState>(builder: (_, state, __) {
+            return state.isFetching3
+                ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: CircularProgressIndicator())
+                : Container(height: 1.0);
+          }),
         ],
-      ),
-    );
-  }
-
-  Widget ListViewItem(
-      BuildContext context, int index, ImageSliderModel sliderModel) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-//        height: 15 * SizeConfig.heightMultiplier,
-//        width: 90 * SizeConfig.widthMultiplier,
-
-        decoration: BoxDecoration(
-            color: Colors.green,
-            image: DecorationImage(
-                image:
-                    NetworkImage(sliderModel.data[index].propertyImages[0].url),
-                fit: BoxFit.fill)),
       ),
     );
   }
@@ -184,13 +214,7 @@ class MainScreen extends StatelessWidget {
           fontWeight: FontWeight.normal,
           fontSize: 2.0 * SizeConfig.textMultiplier,
         ),
-        onFieldSubmitted: (value) {
-//          Navigator.push(
-//              context,
-//              MaterialPageRoute(
-//                  builder: (context) => previewScan(
-//                      SearchController.value.text.toString())));
-        },
+        onFieldSubmitted: (value) {},
         keyboardType: TextInputType.text,
         decoration: new InputDecoration(
           prefixIcon: Icon(

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:gulf_demo/Models/MainDataModel.dart';
 import 'package:gulf_demo/Style/SizeConfig.dart';
 import 'package:gulf_demo/Widgets/ItemImageSlider.dart';
-import 'package:path/path.dart' as path;
+import 'package:gulf_demo/Models/MainDataModel.dart' as mainnn;
 
 class MainHomeItem extends StatelessWidget {
-  MainDataModel HomeItem;
-  int index;
+  mainnn.Datum HomeItem;
 
-  MainHomeItem(this.HomeItem, this.index);
+
+  MainHomeItem(this.HomeItem);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class MainHomeItem extends StatelessWidget {
 //                          HomeItem.data[index].propertyImages[0].url),
 //                      fit: BoxFit.cover)
               ),
-              child: ItemImageSlider(HomeItem,index),
+              child: ItemImageSlider(HomeItem),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0,top:8.0),
@@ -52,7 +52,7 @@ class MainHomeItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          HomeItem.data[index].category,
+                          HomeItem.category,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: Colors.grey,),
                         ),
@@ -60,11 +60,11 @@ class MainHomeItem extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text("${HomeItem.data[index].price} AED",style: TextStyle(color: Colors.black),),
+                  Text("${HomeItem.price} AED",style: TextStyle(color: Colors.black),),
                   SizedBox(
                     width: SizeConfig.widthMultiplier * 50,
                     child: Text(
-                      HomeItem.data[index].address,
+                      HomeItem.address,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
@@ -77,7 +77,7 @@ class MainHomeItem extends StatelessWidget {
                       Row(
                         children: [
                           Icon(Icons.king_bed_outlined,color: Colors.grey),
-                          Text(HomeItem.data[index].bedRoom.toString(),style: TextStyle(color: Colors.grey),)
+                          Text(HomeItem.bedRoom.toString(),style: TextStyle(color: Colors.grey),)
                         ],
                       ),
                       Padding(
@@ -85,7 +85,7 @@ class MainHomeItem extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(Icons.bathtub_outlined,color: Colors.grey),
-                            Text(HomeItem.data[index].bathRoom.toString(),style: TextStyle(color: Colors.grey),)
+                            Text(HomeItem.bathRoom.toString(),style: TextStyle(color: Colors.grey),)
                           ],
                         ),
                       ),
@@ -94,7 +94,7 @@ class MainHomeItem extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(Icons.square_foot,color: Colors.grey),
-                            Text(HomeItem.data[index].areaSpace.toString(),style: TextStyle(color: Colors.grey),)
+                            Text(HomeItem.areaSpace.toString(),style: TextStyle(color: Colors.grey),)
                           ],
                         ),
                       ),

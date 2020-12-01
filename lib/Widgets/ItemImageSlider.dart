@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:gulf_demo/Models/MainDataModel.dart';
 import 'package:gulf_demo/Style/SizeConfig.dart';
+import 'package:gulf_demo/Models/MainDataModel.dart' as mainnn;
 
 class ItemImageSlider extends StatelessWidget {
-  MainDataModel ItemSliderList;
-  int indexx;
+  mainnn.Datum ItemSliderList;
 
-  ItemImageSlider(this.ItemSliderList, this.indexx);
+  ItemImageSlider(this.ItemSliderList);
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +45,7 @@ class ItemImageSlider extends StatelessWidget {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5)),
                               image: DecorationImage(
-                                  image: NetworkImage(ItemSliderList
-                                      .data[indexx].propertyImages[index].url),
+                                  image: NetworkImage(ItemSliderList.propertyImages[index].url),
                                   fit: BoxFit.cover)),
                         ),
                       );
@@ -61,7 +60,7 @@ class ItemImageSlider extends StatelessWidget {
                       activeSize: 5.0,
                       activeColor: Colors.white,
                       color: Colors.grey)),
-              itemCount: ItemSliderList.data[indexx].propertyImages.length,
+              itemCount: ItemSliderList.propertyImages.length,
             ),
           ),
           constraints: new BoxConstraints.loose(new Size(
